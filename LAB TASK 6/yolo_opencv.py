@@ -1,10 +1,8 @@
 """
 YOLO Object Detection and Alert System
-
-This script uses OpenCV and YOLOv3 to detect objects in real-time video streams.
+This uses OpenCV and YOLOv3 to detect objects in real-time video streams.
 It also sends email alerts when a person is detected.
 """
-
 import cv2
 import numpy as np
 import os
