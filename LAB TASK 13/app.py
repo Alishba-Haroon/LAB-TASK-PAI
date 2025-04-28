@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 app = Flask(__name__)
 
 # Config
-DATASET_PATH = r'C:\Users\WB\Desktop\PAI LAB PROJECT\Dataset_Banking_chatbot.csv'
+DATASET_PATH = r'Dataset_Banking_chatbot.csv'
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 THRESHOLD = 0.7
 
