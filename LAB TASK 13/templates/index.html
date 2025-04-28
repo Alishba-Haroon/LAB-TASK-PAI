@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AH Bank Chat</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #183054;
+            background-image: url('static\\background.jpg'); /* Add your image path here */
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-position: center; /* Centers the background image */
+            background-repeat: no-repeat; /* Prevents repeating the background image */
+        }
+
+        .main-container {
+            background: rgba(51, 65, 125, 0.5); /* Set transparency here */
+            background-color: transparent; /* Make sure there's no solid color fallback */
+            width: 90%;
+            max-width: 500px;
+            height: 600px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 46, 109, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #274d81;
+        }
+
+
+
+        .logo {
+            position: fixed;
+            left: 10px;
+            top: 20px;
+            background: none; /* Removed the background */
+            padding: 0; /* Removed padding */
+            border-radius: 50%;
+            box-shadow: none; /* Removed the box-shadow */
+        }
+
+        .logo img {
+            
+            height: 120px; /* Set the height of the logo */
+            width: auto;  /* Maintain the aspect ratio of the logo */
+            object-fit: contain; /* Ensure the logo fits within the specified height without distortion */
+            border-radius: 0; /* Remove the circular border */
+
+        }
+
+
+        .chat-title {
+           padding: 4px;
+           background-color: #fbfbfb; /* Dark background color for the title */
+           color: rgb(16, 12, 12);
+           text-align: center;
+           font-size: 16px;
+           font-weight: bold;
+           border-radius: 12px 12px 0 0; /* Rounded corners on top */
+        }
+
+        .chat-container {
+           flex: 1;
+           padding: 16px;
+           overflow-y: auto;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+           background-color: rgba(43, 68, 103, 0.6); /* Transparency */ 
+        }
+        .message {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 8px;
+            border: 2px solid rgb(255, 255, 255);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .text {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .user-message .text {
+            background: #1a3e72;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+            box-shadow: 0 2px 6px rgba(26, 62, 114, 0.2);
+        }
+
+        .bot-message .text {
+            background: white;
+            color: #333;
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid #e0e5ec;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        form {
+            display: flex;
+            padding: 12px;
+            background: white;
+            border-top: 1px solid #e0e5ec;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e5ec;
+            border-radius: 24px;
+            outline: none;
+            font-size: 14px;
+            background: #f9fbfd;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #1a3e72;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin-left: 8px;
+            border: none;
+            background: #1a3e72;
+            color: white;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #0d2b57;
+        }
+
+        /* Typing indicator */
+        .typing {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin: 0 2px;
+            background-color: #ccc;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing:nth-child(1) { animation-delay: 0s; }
+        .typing:nth-child(2) { animation-delay: 0.2s; }
+        .typing:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                width: 95%;
+                height: 90vh;
+            }
+            
+            .text {
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="logo">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="AH Bank Logo">
+</div>
+
+<div class="main-container">
+    <!-- Title Section -->
+    <div class="chat-title">
+        <h2>AH Finance Chatbot</h2>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="chat-container" id="chat-box">
+        <div class="message bot-message">
+            <img src="{{ url_for('static', filename='chatbot.jpg') }}" alt="Bank Assistant" class="icon">
+            <div class="text">Hi, I'm your assistant. How can I help you today?</div>
+        </div>
+    </div>
+
+    <!-- Input Section -->
+    <form onsubmit="event.preventDefault(); sendMessage();">
+        <input type="text" id="query" placeholder="Type your message..." required autocomplete="off">
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+async function sendMessage() {
+    const userInput = document.getElementById('query');
+    const message = userInput.value.trim();
+    if (!message) return;
+
+    const chatBox = document.getElementById('chat-box');
+
+    // Add user message
+    chatBox.innerHTML += `
+        <div class="message user-message">
+            <div class="text">${escapeHtml(message)}</div>
+            <img src="{{ url_for('static', filename='chat.jpg') }}" alt="You" class="icon">
+        </div>
+    `;
+    userInput.value = '';
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+        // Show typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'message bot-message';
+        typingIndicator.innerHTML = `
+            <img src="{{ url_for('static', filename='chatbot.jpg') }}" alt="Bank Assistant" class="icon">
+            <div class="text"><span class="typing"></span><span class="typing"></span><span class="typing"></span></div>
+        `;
+        chatBox.appendChild(typingIndicator);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Send user input to Flask backend
+        const response = await fetch('/ask', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ query: message })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+
+        // Remove typing indicator
+        chatBox.removeChild(typingIndicator);
+
+        // Add bot response from your Flask/CSV data
+        chatBox.innerHTML += `
+            <div class="message bot-message">
+                <img src="{{ url_for('static', filename='chatbot.jpg') }}" alt="Bank Assistant" class="icon">
+                <div class="text">${escapeHtml(data.response)}</div>
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    } catch (error) {
+        console.error('Error:', error);
+        // Remove typing indicator if it exists
+        if (typingIndicator && typingIndicator.parentNode) {
+            chatBox.removeChild(typingIndicator);
+        }
+        chatBox.innerHTML += `
+            <div class="message bot-message">
+                <img src="{{ url_for('static', filename='chatbot.jpg') }}" alt="Bank Assistant" class="icon">
+                <div class="text">Sorry, I am having trouble processing your request. Please try again later.</div>
+            </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
+function escapeHtml(str) {
+    const element = document.createElement('div');
+    if (str) {
+        element.innerText = str;
+        element.textContent = str;
+    }
+    return element.innerHTML;
+}
+</script>
+</body>
+</html>
