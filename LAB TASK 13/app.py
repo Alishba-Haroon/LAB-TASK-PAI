@@ -3,17 +3,35 @@ import pandas as pd
 from langchain.embeddings import HuggingFaceEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
 app = Flask(__name__)
+<<<<<<< HEAD
 DATASET_PATH = r'Dataset_Banking_chatbot.csv'
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 THRESHOLD = 0.7
 bank = pd.read_csv(DATASET_PATH, encoding='cp1252')
 embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
 query_embeddings = embeddings.embed_documents(bank["Query"].tolist())
+=======
+
+DATASET_PATH = r'C:\Users\WB\Desktop\New folder (4)\LAB TASK 13\Dataset_Banking_chatbot.csv'
+MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+THRESHOLD = 0.7
+
+bank = pd.read_csv(DATASET_PATH, encoding='cp1252')
+embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
+query_embeddings = embeddings.embed_documents(bank["Query"].tolist())
+
+
+>>>>>>> 898d173 (Updated Task 13 files and added Task 14)
 def get_response(query):
     user_embedding = embeddings.embed_query(query)
     similarities = cosine_similarity([user_embedding], query_embeddings)[0]
     best_match_index = similarities.argmax()
     return bank.iloc[best_match_index]["Response"] if similarities[best_match_index] >= THRESHOLD else "Sorry, please ask a question related to finance."
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 898d173 (Updated Task 13 files and added Task 14)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     conversation = []
