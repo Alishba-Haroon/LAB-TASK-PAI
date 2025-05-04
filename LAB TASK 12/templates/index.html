@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuard Bot</title>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='cyber-security.jpeg') }}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #chat-container {
+            background-color: rgba(36, 63, 81, 0.85);
+            width: 60%;
+            max-height: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #cyberguard-title {
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #2f6e6b;
+        }
+        .user-msg, .bot-msg {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+            font-size: 16px;
+        }
+        .user-msg {
+            background-color: #dfe7e9;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-msg {
+            background-color: #e1f7d5;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        #chatBox {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        #chat-form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        #userInput {
+            padding: 10px;
+            width: 75%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        #sendButton {
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: transparent;
+            border: 2px solid #4CAF50;
+            color: #4CAF50;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #sendButton:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="cyberguard-title">CyberGuard Bot</div>
+        <div id="chatBox"></div>
+        <div id="chat-form">
+            <input type="text" id="userInput" placeholder="Ask me something about online safety..." />
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById("userInput");
+            const message = userInput.value.trim();
+            if (message === "") return;
+            const chatBox = document.getElementById("chatBox");
+            const userMessage = document.createElement("div");
+            userMessage.className = "user-msg";
+            userMessage.textContent = message;
+            chatBox.appendChild(userMessage);
+            userInput.value = "";
+            fetch("/get", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const botMessage = document.createElement("div");
+                botMessage.className = "bot-msg";
+                botMessage.textContent = data.response;
+                chatBox.appendChild(botMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+        document.getElementById("userInput").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
