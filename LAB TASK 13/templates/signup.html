@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup</title>
+    <style>
+        body {
+            background-image: url('/static/login pic.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .signup-form {
+            background: rgba(43, 85, 111, 0.85);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            width: 300px;
+            text-align: center;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1b3139;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-form">
+        <h2>Make an Account</h2>
+        <form method="POST">
+            <input type="text" name="username" placeholder="Create Username" required><br><br>
+            <input type="password" name="password" placeholder="Create Password" required><br><br>
+            <button type="submit">Signup</button>
+        </form>
+    </div>
+</body>
+</html>
